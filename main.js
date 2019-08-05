@@ -51,13 +51,30 @@ async function generateHOTP(secret, counter) {
   const key = await generateKey(secret, counter);
   const uKey = new Uint8Array(key);
 
-  const hexKey = Array.prototype.map.call(uKey, x => ('00'+x.toString(16)).slice(-2)).join("")
-  // console.log(`Intermediate HMAC-SHA1 key: ${hexKey}`);
-
   const Snum = truncate(uKey);
-  // console.log('Truncated decimal:', Snum);
+  const padded = ('000000' + (Snum % (10 ** 6))).slice(-6);
 
-  return Snum % (10 ** 6);
+  return padded;
+}
+
+let mode = 'hotp';
+let stepWindow = 30 * 1000;
+let activeButton = document.querySelector('button[data-mode=hotp]');
+let counterRaf = null;
+
+const toggleCounterClock = () => {
+  if (counterRaf) {
+    cancelAnimationFrame(counterRaf);
+    counterRaf = null;
+    return;
+  }
+
+  counterRaf = requestAnimationFrame(updateTOTPCounter);
+}
+
+const getTOTPCounter = () => {
+  const time = Date.now();
+  return Math.floor(time / stepWindow);
 }
 
 const recalculateAndDraw = async () => {
@@ -69,6 +86,44 @@ const recalculateAndDraw = async () => {
 
   const HOTP = await generateHOTP(secret, parseInt(counter, 10));
   result.innerHTML = HOTP;
+}
+
+const updateTOTPCounter = () => {
+  if (mode === 'hotp') return;
+
+  timeStep = getTOTPCounter();
+  if (Date.now() - timeStep * stepWindow < 30) {
+    return requestAnimationFrame(updateTOTPCounter);
+  }
+
+  window['counter-val'].value = timeStep;
+  recalculateAndDraw();
+  requestAnimationFrame(updateTOTPCounter);
+}
+
+const updateActiveButton = mode => {
+  const buttonToActivate = document.querySelector(`button[data-mode=${mode}]`);
+
+  activeButton.classList.remove('active');
+  activeButton = buttonToActivate;
+  activeButton.classList.add('active');
+}
+
+const switchMode = e => {
+  e.preventDefault();
+
+  const newMode = e.target.dataset.mode;
+  mode = newMode;
+  console.log(mode);
+
+  updateActiveButton(mode);
+
+  if (mode === 'totp') {
+    timeStep = getTOTPCounter();
+    window['counter-val'].value = timeStep;
+  }
+
+  toggleCounterClock();
 }
 
 function setupGenerator() {
@@ -83,7 +138,16 @@ function setupGenerator() {
   recalculateAndDraw();
 }
 
+function setupButton(button) {
+  button.addEventListener('click', switchMode);
+}
 
-document.addEventListener('DOMContentLoaded', () =>
-  setupGenerator()  
-);
+function setupButtons() {
+  const buttons = document.querySelectorAll('.mode-selector > button');
+  buttons.forEach(button => setupButton(button));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupGenerator();
+  setupButtons();
+});
