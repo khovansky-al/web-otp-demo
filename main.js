@@ -58,10 +58,14 @@ async function generateHOTP(secret, counter) {
 }
 
 let mode = 'hotp';
-let stepWindow = 30 * 1000;
 let activeButton = document.querySelector('button[data-mode=hotp]');
+
+let stepWindow = 30 * 1000;
 let counterRaf = null;
 let lastTimeStep = 0;
+
+let stream;
+let streamRunning = false;
 
 const toggleCounterClock = () => {
   if (counterRaf) {
@@ -124,12 +128,15 @@ const updateActiveButton = mode => {
   activeButton.classList.add('active');
 }
 
-const switchMode = e => {
+const onModeSwitch = e => {
   e.preventDefault();
 
   const newMode = e.target.dataset.mode;
+  switchMode(newMode);
+}
+
+const switchMode = newMode => {
   mode = newMode;
-  console.log(mode);
 
   updateActiveButton(mode);
 
@@ -142,28 +149,81 @@ const switchMode = e => {
   toggleCounterClock();
 }
 
-function setupGenerator() {
+const setupFromQR = data => {
+  const url = new URL(data);
+  const [scheme] = url.pathname.slice(2).split('/');
+  const search = new URLSearchParams(url.search);
+
+  const secret = search.get('secret');
+  let counter;
+
+  if (scheme === 'hotp') {
+    counter = search.get('counter');
+  } else {
+    stepWindow = parseInt(search.get('period'), 10) * 1000;
+    counter = getTOTPCounter();
+  }
+
+  switchMode(scheme);
+  setupGenerator(secret, counter);
+}
+
+const searchQR = imageData => {
+  const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+  if (code) {
+    stopStream();
+    setupFromQR(code.data);
+  }
+}
+
+const startStream = () => {
+  stream = new StreamDisplay(searchQR);
+  stream.startCapture();
+  streamRunning = true;
+}
+
+const stopStream = () => {
+  stream.stopCapture();
+  stream = null;
+  streamRunning = false;
+}
+
+const onScanQr = e => {
+  e.preventDefault();
+
+  if (!streamRunning) {
+    startStream();
+  } else {
+    stopStream();
+  }
+}
+
+function setupGenerator(secret, counter) {
   const secretInput = window['secret-val'];
   const counterInput = window['counter-val'];
 
   secretInput.addEventListener('input', recalculateAndDraw);
   counterInput.addEventListener('input', recalculateAndDraw);
 
-  secretInput.value = '12345678901234567890';
-  counterInput.value = '0';
+  secretInput.value = secret;
+  counterInput.value = counter;
   recalculateAndDraw();
 }
 
-function setupButton(button) {
-  button.addEventListener('click', switchMode);
+function setupModeButton(button) {
+  button.addEventListener('click', onModeSwitch);
 }
 
 function setupButtons() {
-  const buttons = document.querySelectorAll('.mode-selector > button');
-  buttons.forEach(button => setupButton(button));
+  const modeButtons = document.querySelectorAll('.mode-selector > button');
+  const qrButton = document.querySelector('.qr-scan');
+
+  modeButtons.forEach(button => setupModeButton(button));
+  qrButton.addEventListener('click', onScanQr);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  setupGenerator();
+  setupGenerator('12345678901234567890', '0');
   setupButtons();
 });

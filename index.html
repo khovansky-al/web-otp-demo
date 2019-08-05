@@ -91,9 +91,13 @@
         color: var(--active-color);
       }
 
-      .counter-block {
+      .input-group {
         display: flex;
         align-items: flex-end;
+      }
+
+      .input-group > input {
+        flex: 1;
       }
 
       .timer {
@@ -105,6 +109,23 @@
 
       .timer:empty {
         padding: 0;
+      }
+
+      .qr-scan {
+        padding: 0;
+        margin: 0 0 0 10px;
+        background: none;
+        border: none;
+      }
+
+      .qr-scan > svg {
+        width: 30px;
+        height: 30px;
+        background: #fff;
+      }
+
+      .qr-scan:active > svg {
+        background: #ddd;
       }
 
       /* --- GITHUB CORNER */
@@ -145,12 +166,26 @@
 
         <p>
           <label for="secret-val">Secret</label>
-          <input type="text" id="secret-val" />
+          <span class="input-group">
+            <input type="text" id="secret-val" />
+            <button class="qr-scan">
+              <svg height="909" viewBox="-21 -21 683 682" width="909" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M77 89v173c0 7 6 13 13 13h173c7 0 13-6 13-13v-33a13 13 0 1 0-25 0v21H102V101h149v30a13 13 0 1 0 25 0V89c0-7-6-13-13-13H90c-7 0-13 6-13 13zm0 0" />
+                <path
+                  d="M151 137c-7 0-13 5-13 12v52c0 7 6 13 13 13h52c7 0 12-6 12-13v-52c0-7-5-12-12-12zm39 52h-27v-27h27zm0 0M263 364H90c-7 0-13 6-13 13v173c0 7 6 13 13 13h173c7 0 13-6 13-13V377c0-7-6-13-13-13zm-12 174H102V389h149zm0 0M379 275h174c6 0 12-6 12-13V89c0-7-6-13-12-13H379c-7 0-13 6-13 13v173c0 7 6 13 13 13zm13-174h148v149H392zm0 0M565 550V377c0-7-6-13-12-13H379c-7 0-13 6-13 13v173c0 7 6 13 13 13h174c6 0 12-6 12-13zm-25-12H392V389h148zm0 0" />
+                <path
+                  d="M553 333a13 13 0 0 0 0-25H333V87a13 13 0 0 0-26 0v221H141a13 13 0 0 0 0 25h166v217a13 13 0 0 0 26 0V333zm0 0" />
+                <path
+                  d="M151 503h52c7 0 12-5 12-12v-52c0-7-5-13-12-13h-52c-7 0-13 6-13 13v52c0 7 6 12 13 12zm12-52h27v27h-27zm0 0M492 137h-52c-7 0-13 5-13 12v52c0 7 6 13 13 13h52c7 0 12-6 12-13v-52c0-7-5-12-12-12zm-13 52h-27v-27h27zm0 0M440 503h52c7 0 12-5 12-12v-52c0-7-5-13-12-13h-52c-7 0-13 6-13 13v52c0 7 6 12 13 12zm12-52h27v27h-27zm0 0M87 308a13 13 0 0 0 5 24h1a13 13 0 1 0-6-24zm0 0M261 168h-1a13 13 0 0 0 6 24h1a13 13 0 0 0-6-24zm0 0M13 103c6 0 12-5 12-12V25h63a13 13 0 1 0 0-25H13C6 0 0 6 0 13v78c0 7 6 12 13 12zm0 0M627 0h-75a13 13 0 1 0 0 25h63v66a13 13 0 1 0 25 0V13c0-7-6-13-13-13zm0 0M88 615H25v-65a13 13 0 0 0-25 0v77c0 7 6 13 13 13h75a13 13 0 1 0 0-25zm0 0M627 537c-6 0-12 6-12 13v65h-63a13 13 0 1 0 0 25h75c7 0 13-6 13-13v-77c0-7-6-13-13-13zm0 0" />
+              </svg>
+            </button>
+          </span>
         </p>
 
         <p>
           <label for="counter-val">Counter</label>
-          <span class="counter-block">
+          <span class="input-group">
             <input type="text" id="counter-val" />
             <span class="timer"></span>
           </span>
@@ -162,6 +197,29 @@
       </div>
     </div>
 
+    <script src="https://unpkg.com/stream-display@1.0.0/dist/stream-display.js"></script>
+    <script src="https://unpkg.com/jsqr@1.2.0/dist/jsQR.js"></script>
     <script src="main.js"></script>
+
+    <div class="icon-attribution">
+      QR code icon by
+      <a
+        href="https://www.flaticon.com/authors/freepik"
+        title="Freepik"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Freepik
+      </a>
+      licensed by
+      <a
+        href="http://creativecommons.org/licenses/by/3.0/"
+        title="Creative Commons BY 3.0"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        CC 3.0 BY
+      </a>
+    </div>
   </body>
 </html>
