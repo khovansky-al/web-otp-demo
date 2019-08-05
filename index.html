@@ -31,6 +31,8 @@
         color: #DDD;
         font-weight: bold;
         font-size: 2rem;
+        height: 2rem;
+        line-height: 2.4rem;
       }
 
       a {
@@ -89,6 +91,22 @@
         color: var(--active-color);
       }
 
+      .counter-block {
+        display: flex;
+        align-items: flex-end;
+      }
+
+      .timer {
+        padding: 0 5px 0 10px;
+        font-size: 2rem;
+        font-weight: bold;
+        line-height: 1.8rem;
+      }
+
+      .timer:empty {
+        padding: 0;
+      }
+
       /* --- GITHUB CORNER */
 
       .github-corner:hover .octo-arm {
@@ -132,7 +150,10 @@
 
         <p>
           <label for="counter-val">Counter</label>
-          <input type="text" id="counter-val" />
+          <span class="counter-block">
+            <input type="text" id="counter-val" />
+            <span class="timer"></span>
+          </span>
         </p>
       </form>
 

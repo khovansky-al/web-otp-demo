@@ -61,9 +61,13 @@ let mode = 'hotp';
 let stepWindow = 30 * 1000;
 let activeButton = document.querySelector('button[data-mode=hotp]');
 let counterRaf = null;
+let lastTimeStep = 0;
 
 const toggleCounterClock = () => {
   if (counterRaf) {
+    const timer = document.querySelector('.timer');
+    timer.innerHTML = '';
+
     cancelAnimationFrame(counterRaf);
     counterRaf = null;
     return;
@@ -88,14 +92,25 @@ const recalculateAndDraw = async () => {
   result.innerHTML = HOTP;
 }
 
+const updateTimer = time => {
+  const timer = document.querySelector('.timer');
+  timer.innerHTML = ('00' + time).slice(-2);
+}
+
 const updateTOTPCounter = () => {
   if (mode === 'hotp') return;
 
-  timeStep = getTOTPCounter();
-  if (Date.now() - timeStep * stepWindow < 30) {
+  const timeSinceStep = Date.now() - lastTimeStep * stepWindow;
+  const timeLeft = Math.ceil((stepWindow - timeSinceStep) / 1000);
+
+  updateTimer(timeLeft);
+
+  if (timeLeft > 0) {
     return requestAnimationFrame(updateTOTPCounter);
   }
 
+  timeStep = getTOTPCounter();
+  lastTimeStep = timeStep;
   window['counter-val'].value = timeStep;
   recalculateAndDraw();
   requestAnimationFrame(updateTOTPCounter);
@@ -121,6 +136,7 @@ const switchMode = e => {
   if (mode === 'totp') {
     timeStep = getTOTPCounter();
     window['counter-val'].value = timeStep;
+    recalculateAndDraw();
   }
 
   toggleCounterClock();
