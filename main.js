@@ -152,15 +152,15 @@ const switchMode = newMode => {
 const setupFromQR = data => {
   const url = new URL(data);
   const [scheme] = url.pathname.slice(2).split('/');
-  const search = new URLSearchParams(url.search);
+  const params = new URLSearchParams(url.search);
 
-  const secret = search.get('secret');
+  const secret = params.get('secret');
   let counter;
 
   if (scheme === 'hotp') {
-    counter = search.get('counter');
+    counter = params.get('counter');
   } else {
-    stepWindow = parseInt(search.get('period'), 10) * 1000;
+    stepWindow = parseInt(params.get('period'), 10) * 1000;
     counter = getTOTPCounter();
   }
 
