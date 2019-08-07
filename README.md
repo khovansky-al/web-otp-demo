@@ -3,8 +3,7 @@
 This is a 2FA OTP code generator written in JS.
 
 It is a supplementary demo for
-my article [Generating 2FA One-Time Passwords in JS Using Web Crypto API]()
-<INSERT LINK>.
+my article [Generating 2FA One-Time Passwords in JS Using Web Crypto API](https://dev.to/al_khovansky/generating-2fa-one-time-passwords-in-js-using-web-crypto-api-1hfo).
 
 As you can see from the article's title it uses Web Crypto API.
 It also uses [stream-display](https://github.com/khovansky-al/stream-display)
