@@ -1,0 +1,147 @@
+:root {
+  font-family: OpenSans, sans-serif;
+  background-color: #537EFF;
+  color: #EEE;
+  --accent-color: #293F80;
+  --active-color: #FF8B6E;
+}
+
+html, body {
+  height: 100%;
+}
+
+.wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.result {
+  background-color: var(--accent-color);
+  padding: 20px;
+  border-radius: 15px;
+  margin-top: 15px;
+  color: #DDD;
+  font-weight: bold;
+  font-size: 2rem;
+  height: 2rem;
+  line-height: 2.4rem;
+}
+
+a {
+  color: #0E2A38;
+}
+
+.actions {
+  margin-top: 1rem;
+}
+
+form > p {
+  display: flex;
+  flex-direction: column;
+}
+
+form > p > label {
+  margin-bottom: 5px;
+}
+
+input {
+  min-width: 200px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1.1rem;
+}
+
+input:focus {
+  border: 1px solid var(--active-color);
+  outline: none;
+}
+
+.mode-selector {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.mode-selector > button {
+  flex: 0.47;
+  padding: 10px 0;
+  background: none;
+  border: none;
+  border-bottom: 5px solid var(--accent-color);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform .3s ease-out;
+}
+
+.mode-selector > button:hover {
+  transform: translateY(-2px);
+}
+
+.mode-selector > button.active {
+  border-color: var(--active-color);
+  color: var(--active-color);
+}
+
+.input-group {
+  display: flex;
+  align-items: flex-end;
+}
+
+.input-group > input {
+  flex: 1;
+}
+
+.timer {
+  padding: 0 5px 0 10px;
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1.8rem;
+}
+
+.timer:empty {
+  padding: 0;
+}
+
+.qr-scan {
+  padding: 0;
+  margin: 0 0 0 10px;
+  background: none;
+  border: none;
+}
+
+.qr-scan > svg {
+  width: 30px;
+  height: 30px;
+  background: #fff;
+}
+
+.qr-scan:active > svg {
+  background: #ddd;
+}
+
+.icon-attribution {
+  margin-top: 80px;
+  opacity: 0.5;
+}
+
+/* --- GITHUB CORNER */
+
+.github-corner:hover .octo-arm {
+  animation:octocat-wave 560ms ease-in-out
+}
+
+@keyframes octocat-wave {
+  0%, 100% { transform:rotate(0) }
+  20%, 60% { transform:rotate(-25deg) }
+  40%, 80% { transform:rotate(10deg) }
+}
+
+@media (max-width:500px) {
+  .github-corner:hover .octo-arm { animation:none }
+  .github-corner .octo-arm { animation:octocat-wave 560ms ease-in-out }
+}
